@@ -1,103 +1,98 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4">
+            <span className="gradient-text">THIS IS BASICALLY THE PASGE.TSK</span> 
+            <span className="text-gray-900 dark:text-white"> Working! ✅</span>
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300">
+            All systems operational - ready for portfolio development
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        {/* Basic Colors Test */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-red-500 hover:bg-red-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-105">
+            <h3 className="text-xl font-bold mb-2">🔴 Basic Colors</h3>
+            <p>Standard Tailwind colors working perfectly</p>
+          </div>
+          <div className="bg-primary-500 hover:bg-primary-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-105">
+            <h3 className="text-xl font-bold mb-2">🔵 Primary</h3>
+            <p>Custom primary colors configured</p>
+          </div>
+          <div className="bg-accent-500 hover:bg-accent-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-105">
+            <h3 className="text-xl font-bold mb-2">🟣 Accent</h3>
+            <p>Custom accent colors working</p>
+          </div>
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+          <div className="glass p-4 rounded-lg">
+            <h4 className="font-semibold text-gray-900 dark:text-white">✨ Glass Effect</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Backdrop blur working</p>
+          </div>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+            <h4 className="font-semibold text-gray-900 dark:text-white">🌙 Dark Mode</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Theme switching ready</p>
+          </div>
+          <div className="bg-gradient-to-r from-primary-500 to-accent-500 text-white p-4 rounded-lg">
+            <h4 className="font-semibold">🎨 Gradients</h4>
+            <p className="text-sm">Beautiful gradients</p>
+          </div>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border-l-4 border-primary-500">
+            <h4 className="font-semibold text-gray-900 dark:text-white">📱 Responsive</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Mobile-first design</p>
+          </div>
+        </div>
+
+        {/* Animation Test */}
+        <div className="text-center mb-12">
+          <div className="inline-block animate-float mb-4">
+            <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center text-white text-2xl">
+              🚀
+            </div>
+          </div>
+          <p className="text-gray-600 dark:text-gray-300">Floating animation working</p>
+        </div>
+
+        {/* Status Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-6 rounded-lg">
+            <div className="flex items-center mb-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+              <h3 className="font-semibold text-green-800 dark:text-green-200">✅ Tailwind CSS v3</h3>
+            </div>
+            <p className="text-green-700 dark:text-green-300">Stable version installed and configured</p>
+          </div>
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-6 rounded-lg">
+            <div className="flex items-center mb-2">
+              <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+              <h3 className="font-semibold text-blue-800 dark:text-blue-200">🎯 Ready for Development</h3>
+            </div>
+            <p className="text-blue-700 dark:text-blue-300">All systems ready for portfolio components</p>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="text-center space-x-4">
+          <button className="bg-primary-600 hover:bg-primary-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200">
+            Start Building Portfolio
+          </button>
+          <button className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200">
+            Test Components
+          </button>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-16 text-center text-gray-500 dark:text-gray-400">
+          <p>🎉 If you can see this page styled correctly, everything is working!</p>
+          <p className="mt-2 text-sm">Now you can start building your amazing portfolio components.</p>
+        </div>
+      </div>
+    </main>
   );
 }
