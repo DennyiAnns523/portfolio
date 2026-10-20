@@ -82,7 +82,8 @@
         puff.style.left=(30+Math.random()*40)+'%';puff.style.setProperty('--drift',((Math.random()-.5)*90)+'px');puff.style.animationDelay=(i*25)+'ms';root.append(puff);setTimeout(()=>puff.remove(),1000);}
     }
     function animate(ts){
-      if(!visiting)return;const dt=last?Math.min(80,ts-last):0;last=ts;
+      // A delivery keeps real-time pace even on slow frames; other visits cap each step at 80 ms.
+      if(!visiting)return;const dt=last?Math.min(delivery&&!delivery.dropped?250:80,ts-last):0;last=ts;
       if(held?.lifted||flight){handle(ts,dt/1000);frame=requestAnimationFrame(animate);return;}
       const resting=hover||performance.now()<pauseUntil||document.hidden;
       if(!resting)elapsed+=dt;
@@ -215,17 +216,22 @@
     // Walks in carrying a note and drops it mid-screen; onDrop(rect) gets the note's last
     // on-screen box (or null if the visit was cut short). Returns false when the cat can't come
     // (reduced motion, visits switched off, sprite not loaded), so the caller shows the note itself.
-    function deliver(onDrop){
+    function deliver(onDrop,opts={}){
       if(!atlases.walk||calm()||!enabled)return false;
       if(visiting)stop();
       clearTimeout(timer);delete root.dataset.nextVisit;
       behavior='deliver';entry='left';direction=1;roll=null;canvas.style.transform='';delete root.dataset.rollPhase;
-      duration=17000;elapsed=0;last=0;hover=false;pauseUntil=0;visiting=true;greeted=false;returnFocus=document.activeElement;
+      // A shorter duration walks faster (17 s crosses the whole screen at the usual pace).
+      // greeted=true: no stopping to chat with mini me while carrying a note.
+      duration=opts.duration||17000;elapsed=0;last=0;hover=false;pauseUntil=0;visiting=true;greeted=true;returnFocus=document.activeElement;
       root.dataset.behavior=behavior;root.dataset.visiting='true';root.hidden=false;speech.hidden=true;yarn.hidden=true;letter.hidden=false;
-      const w=root.offsetWidth;delivery={dropX:Math.max(16,Math.min(innerWidth*.5-w*.75,innerWidth-w*1.6)),dropped:false,onDrop};
+      const w=root.offsetWidth,d=delivery={dropX:Math.max(16,Math.min(innerWidth*.5-w*.75,innerWidth-w*1.6)),dropped:false,onDrop};
+      // However slow the page is, the note never waits longer than this to appear.
+      setTimeout(()=>{if(delivery===d&&!d.dropped){d.dropped=true;const rect=letter.hidden?null:letter.getBoundingClientRect();letter.hidden=true;d.onDrop(rect);}},opts.maxWait||6000);
       frame=requestAnimationFrame(animate);return true;
     }
-    const api={show,deliver,gentle(){if(calm()){stop();clearTimeout(timer);delete root.dataset.nextVisit;}else if(!visiting)schedule(true);}};
+    // ready(): the sprite has loaded; canDeliver(): the cat may walk in right now.
+    const api={show,deliver,ready:()=>!!atlases.walk,canDeliver:()=>!!atlases.walk&&!calm()&&enabled,gentle(){if(calm()){stop();clearTimeout(timer);delete root.dataset.nextVisit;}else if(!visiting)schedule(true);}};
     window.Moriar=api;
     return api;
   };

@@ -4,7 +4,7 @@
 (function () {
   var LABELS = { instagram: 'Instagram', linkedin: 'LinkedIn', x: 'X', twitter: 'X', github: 'GitHub', facebook: 'Facebook', youtube: 'YouTube', whatsapp: 'WhatsApp' };
   var REFERRERS = [[/instagram\./, 'instagram'], [/linkedin\.|lnkd\.in/, 'linkedin'], [/(^|\.)(x|twitter)\.com$|(^|\.)t\.co$/, 'x'], [/github\./, 'github'], [/facebook\.|fb\./, 'facebook'], [/youtube\.|youtu\.be/, 'youtube'], [/whatsapp\./, 'whatsapp']];
-  var K = { visits: 'denny-world-visits', session: 'denny-world-session', source: 'denny-world-source', id: 'denny-world-visitor-id', name: 'denny-world-name', who: 'denny-world-who', feedback: 'denny-world-feedback-given', noted: 'denny-world-noted' };
+  var K = { visits: 'denny-world-visits', session: 'denny-world-session', source: 'denny-world-source', id: 'denny-world-visitor-id', name: 'denny-world-name', who: 'denny-world-who', feedback: 'denny-world-feedback-given', notedEnd: 'denny-world-noted-end', hideHello: 'denny-world-hello-hidden' };
 
   var store = {
     get: function (s, k) { try { return window[s].getItem(k); } catch (e) { return null; } },
@@ -21,7 +21,16 @@
 
   // ---- Where they came from
   var url = new URL(location.href);
+  // /?reset-me makes this browser a first-time visitor again (handy for trying the notes yourself).
+  if (url.searchParams.has('reset-me')) {
+    ['localStorage', 'sessionStorage'].forEach(function (s) {
+      try { Object.keys(window[s]).forEach(function (k) { if (k.indexOf('denny-world') === 0) window[s].removeItem(k); }); } catch (e) { /* ignore */ }
+    });
+    url.searchParams.delete('reset-me');
+    history.replaceState(history.state, '', url.pathname + url.search + url.hash);
+  }
   var from = (url.searchParams.get('from') || '').toLowerCase().slice(0, 40);
+  if (from === 'ig') from = 'instagram';
   if (url.searchParams.has('from')) {
     // Keep the address bar clean, so a shared link doesn't credit the wrong platform.
     url.searchParams.delete('from');
@@ -97,7 +106,7 @@
   }
   function feedbackGiven() { return store.get('localStorage', K.feedback) === '1'; }
 
-  function renderWho(body) {
+  function renderWho(body, step) {
     body.innerHTML =
       '<p class="note-q">Hey 👋 who’s visiting?</p>' +
       '<p class="note-sub">Tell me your name or @handle, or stay a mystery.</p>' +
@@ -134,7 +143,9 @@
     };
     setTimeout(function () { if (form.isConnected) form.elements.who.focus({ preventScroll: true }); }, 450);
     // After "who", go straight on to feedback (unless it was already given).
+    // On arrival ("hello") the note just says hi back; at the end ("who") it goes on to feedback.
     function next(heading) {
+      if (step === 'hello') { thanks(body, heading, 'Enjoy the wander ✳'); return; }
       if (feedbackGiven()) { thanks(body, heading); return; }
       renderFeedback(body, heading);
     }
@@ -181,9 +192,10 @@
     };
   }
 
-  function thanks(body, text) {
-    body.innerHTML = '<p class="note-q note-thanks"></p><p class="note-sub">Moriar will pass it on.</p>';
+  function thanks(body, text, sub) {
+    body.innerHTML = '<p class="note-q note-thanks"></p><p class="note-sub"></p>';
     body.querySelector('.note-q').textContent = text;
+    body.querySelector('.note-sub').textContent = sub || 'Moriar will pass it on.';
     setTimeout(closeCard, 2600);
   }
 
@@ -192,11 +204,15 @@
     if (card) return;
     cardOpenedAt = Date.now();
     card = el('aside', 'note-card');
-    card.setAttribute('aria-label', step === 'who' ? 'Say who you are' : 'Leave feedback');
+    card.setAttribute('aria-label', step === 'feedback' ? 'Leave feedback' : 'Say who you are');
     card.innerHTML = '<span class="note-tab">✉ Moriar brought you a note</span><button type="button" class="note-close" aria-label="Close">×</button><div class="note-body"></div>';
-    card.querySelector('.note-close').onclick = closeCard;
+    card.querySelector('.note-close').onclick = function () {
+      // × on the "who" note means "not now": don't ask again until the browser is closed.
+      if (step !== 'feedback') store.set('sessionStorage', K.hideHello, '1');
+      closeCard();
+    };
     var body = card.querySelector('.note-body');
-    if (step === 'who') renderWho(body); else renderFeedback(body);
+    if (step === 'feedback') renderFeedback(body); else renderWho(body, step);
     card.style.visibility = 'hidden';
     document.body.append(card);
 
@@ -214,14 +230,30 @@
     requestAnimationFrame(function () { card && card.classList.add('open'); });
   }
 
-  function deliverNote(step) {
-    store.set('sessionStorage', K.noted, '1');
-    var cat = window.Moriar;
-    var carried = cat && typeof cat.deliver === 'function' && cat.deliver(function (rect) { showNote(step, rect); });
-    if (!carried) showNote(step, null);
+  // Moriar carries the note in; without the cat (reduced motion, visits off, sprite missing)
+  // the note simply pops up. Waits briefly for the cat's sprite to finish loading.
+  function deliverNote(step, opts) {
+    var waited = 0;
+    (function attempt() {
+      var cat = window.Moriar;
+      if (cat && cat.ready && !cat.ready() && waited < 5000) { waited += 250; setTimeout(attempt, 250); return; }
+      if (card) return;
+      var carried = cat && cat.canDeliver && cat.canDeliver() && cat.deliver(function (rect) { showNote(step, rect); }, opts);
+      if (!carried) showNote(step, null);
+    })();
   }
 
-  // Reaching the end of the page (the footer) brings the note, once per session.
+  // On arrival: Moriar trots in with "who's visiting?" on every page load until the visitor answers
+  // (a name or "stay anonymous"); × hides it for the rest of the browser session.
+  if (!me.name && !store.get('localStorage', K.who) && !store.get('sessionStorage', K.hideHello)) {
+    setTimeout(function () {
+      var dialog = document.querySelector('#door');
+      if (!(dialog && dialog.open)) deliverNote('hello', { duration: 5200, maxWait: 4000 });
+    }, 900);
+  }
+
+  // Reaching the end of the page (the footer) brings the feedback note, once per session,
+  // asking for a name first if the arrival note was closed without an answer.
   var footer = document.querySelector('footer');
   if (footer && 'IntersectionObserver' in window) {
     var seenTop = false;
@@ -229,12 +261,13 @@
       var entry = entries[0];
       // Only after a real scroll down, not when a short window shows the footer on load.
       if (scrollY > innerHeight) seenTop = true;
-      if (!entry.isIntersecting || !seenTop || card || store.get('sessionStorage', K.noted)) return;
+      if (!entry.isIntersecting || !seenTop || card || store.get('sessionStorage', K.notedEnd)) return;
+      store.set('sessionStorage', K.notedEnd, '1');
       var dialog = document.querySelector('#door');
       if (dialog && dialog.open) return;
       var step = !me.name && !store.get('localStorage', K.who) ? 'who' : !feedbackGiven() ? 'feedback' : null;
       observer.disconnect();
-      if (step) setTimeout(function () { deliverNote(step); }, 500);
+      if (step) setTimeout(function () { deliverNote(step, { duration: 8000, maxWait: 5000 }); }, 400);
     }, { threshold: 0.4 }).observe(footer);
   }
 

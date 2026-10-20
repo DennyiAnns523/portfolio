@@ -57,7 +57,15 @@ const nextConfig: NextConfig = {
   },
 
   async redirects() {
-    return [{ source: `/${WORLD_FILE}`, destination: '/', permanent: true }];
+    return [
+      { source: `/${WORLD_FILE}`, destination: '/', permanent: true },
+      // Short links for social bios: /instagram → /?from=instagram (counted and greeted as Instagram).
+      {
+        source: '/:platform(instagram|ig|linkedin|x|twitter|github|facebook|youtube|whatsapp)',
+        destination: '/?from=:platform',
+        permanent: false,
+      },
+    ];
   },
 
   async headers() {
