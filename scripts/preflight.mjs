@@ -5,7 +5,9 @@
 // Vercel builds what is pushed to GitHub, so "what would be published" is every file git
 // tracks or would add with `git add -A` (ignored files never leave this machine).
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 
 const args = new Set(process.argv.slice(2));
 const secretsOnly = args.has('--secrets-only');
@@ -105,18 +107,34 @@ function checkGit() {
     fail('uncommitted changes: Vercel deploys what is on GitHub, so commit (or stash) first, or pass --allow-dirty');
     console.log(dirty.split('\n').slice(0, 15).map((l) => `    ${l}`).join('\n'));
   } else {
-    console.log('  ✓ working tree clean');
+    console.log(dirty ? '  - uncommitted changes allowed (--allow-dirty)' : '  ✓ working tree clean');
   }
 }
 
-function run(name, cmd, cmdArgs) {
+function run(name, cmd, cmdArgs, cwd) {
   step(name);
   // npm is a .cmd on Windows, which needs a shell; the arguments are fixed strings above.
   const r = isWin
-    ? spawnSync([cmd, ...cmdArgs].join(' '), { stdio: 'inherit', shell: true })
-    : spawnSync(cmd, cmdArgs, { stdio: 'inherit' });
+    ? spawnSync([cmd, ...cmdArgs].join(' '), { stdio: 'inherit', shell: true, cwd })
+    : spawnSync(cmd, cmdArgs, { stdio: 'inherit', cwd });
   if (r.status !== 0) fail(`${name} failed`);
   return r.status === 0;
+}
+
+// Builds the committed HEAD in a throwaway worktree: it's exactly what Vercel will build,
+// and it never touches this folder's .next, so a running `npm run dev` keeps working.
+function buildInWorktree() {
+  const dir = mkdtempSync(path.join(tmpdir(), 'preflight-build-'));
+  try {
+    git('worktree', 'add', '--detach', dir, 'HEAD');
+    return (
+      run('Install (clean copy of HEAD)', 'npm', ['ci', '--prefer-offline', '--no-audit', '--no-fund'], dir) &&
+      run('Production build', 'npm', ['run', 'build'], dir)
+    );
+  } finally {
+    spawnSync('git', ['worktree', 'remove', '--force', dir]);
+    rmSync(dir, { recursive: true, force: true });
+  }
 }
 
 const [major, minor] = process.versions.node.split('.').map(Number);
@@ -131,7 +149,7 @@ if (!secretsOnly) {
       run('Lint', 'npm', ['run', 'lint']) &&
       run('Typecheck', 'npm', ['run', 'typecheck']) &&
       run('Tests', 'npm', ['test']) &&
-      run('Production build', 'npm', ['run', 'build']);
+      buildInWorktree();
   }
 }
 
