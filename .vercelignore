@@ -1,0 +1,11 @@
+# Only used by `vercel` CLI deploys (Git deploys already exclude .gitignore'd files).
+.env*
+!.env.example
+*.pem
+*.key
+.git
+.next
+node_modules
+coverage
+tests
+*.tsbuildinfo

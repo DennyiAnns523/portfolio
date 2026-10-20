@@ -1,0 +1,107 @@
+/* Cube and garden scenes: full-screen stages with a small title, very few words, and the
+   controls gathered into a compact dock above the chapter bar. Loaded last. */
+
+/* ---- Cube: a title row, then the cube filling everything below it. A grid rather than overlapping
+   layers, so the cube can't slide under the words on any screen. */
+.cube-room{display:grid!important;grid-template-rows:auto minmax(0,1fr);grid-template-columns:minmax(0,1fr)}
+.cube-room .story{position:relative;top:auto;left:auto;width:auto;max-width:none;padding:6svh 5% 0}
+.cube-room .story>*:not(.scoreboard){width:fit-content;max-width:100%}
+.cube-room .story h3{font-size:clamp(26px,2.8vw,42px);line-height:1.05;letter-spacing:-1.2px;margin:10px 0 6px;max-width:none}
+.cube-room .story>p:not(.game-status),.cube-room .chapter-no,.cube-room #turn-history,.cube-help{display:none}
+.cube-room #cube-status{display:block!important;font-size:11px;opacity:.7;margin:0;max-width:260px}
+.cube-room .scoreboard{position:absolute;top:6svh;right:5%;left:auto;width:max-content;margin:0;padding:0;border:0;display:flex;flex-direction:row;gap:24px;text-align:right}
+.cube-room .scoreboard b{display:block;font-size:24px!important;line-height:1.1}
+.cube-room .scoreboard span{font-size:8px}
+.cube-room .game-area{position:relative;inset:auto;right:auto;top:auto;width:auto;height:auto;min-height:0;padding:8px 4% 84px;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+.cube-room .game-area canvas{flex:1 1 0;width:100%;height:auto;min-height:0;max-height:none;object-fit:contain;aspect-ratio:auto}
+.cube-room .cube-moves{display:flex;justify-content:center;gap:10px;max-width:none;width:fit-content;margin:0 auto}
+.cube-room .cube-moves button{width:clamp(40px,4vw,52px);height:auto;aspect-ratio:1;flex:none;font-size:14px}
+.cube-room .cube-tools{justify-content:center;gap:14px;flex-wrap:wrap;width:fit-content;max-width:100%;margin:0 auto}
+@media(min-width:801px){.cube-room .story h3 br{display:none}}
+
+/* ---- Garden: the whole scene is the garden. */
+.garden .story{top:6%;left:5%;width:auto;max-width:min(60%,420px)}
+.garden .story h3{font-size:clamp(26px,2.8vw,42px);line-height:1.05;letter-spacing:-1.2px;margin:10px 0 6px;max-width:none}
+.garden .story h3{text-shadow:0 0 24px #d6b8ff88}
+.garden .story>.game-status{display:block!important;font-size:11px;opacity:.75;margin:0;min-height:1.5em;max-width:280px}
+.garden .chapter-no{display:none}
+.garden-basket{position:absolute;top:6%;right:5%;z-index:4;display:flex;align-items:center;gap:8px;font:22px Georgia,serif;color:#fbf2ff;text-shadow:0 0 12px #ffc6ec99;pointer-events:none}
+.garden-basket .basket-icon{font-size:22px;display:inline-block}
+.garden-basket.bump{animation:basket-bump .45s cubic-bezier(.3,1.8,.5,1)}
+.garden .game-area{position:absolute;inset:0;right:auto;top:0;width:100%;height:100%;padding:0;display:block;background:none}
+#garden-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;outline:none;-webkit-tap-highlight-color:transparent}
+#garden-canvas:focus-visible{outline:2px dashed #d9c6ff;outline-offset:-10px}
+.garden-soil{position:absolute;pointer-events:none}
+.garden-dock [hidden]{display:none!important}
+/* A soft shade under the title and basket, so they read over the scene. */
+.garden .game-area::after{content:'';position:absolute;left:0;right:0;top:0;height:min(34%,260px);background:linear-gradient(#140c2e99,#140c2e33 60%,transparent);pointer-events:none;z-index:1}
+.garden .story,.garden-basket{z-index:4}
+.garden .game-area::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 75% at 50% 58%,transparent 60%,#0c062033 100%);pointer-events:none;z-index:1}
+.garden-dock{position:absolute;left:50%;bottom:84px;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:2px;padding:5px;border-radius:40px;background:linear-gradient(135deg,#2a1d5acc,#1a2a4ecc);backdrop-filter:blur(14px) saturate(1.3);border:1px solid #ffffff26;box-shadow:0 0 28px #b89cff40,inset 0 0 18px #ffffff0d;max-width:calc(100% - 20px)}
+.garden-dock button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:#f0eaff;border-radius:28px;padding:7px 11px 6px;font-size:20px;line-height:1;cursor:pointer;transition:background .2s,transform .2s}
+.garden-dock button small{font:9px 'DM Sans',Arial,sans-serif;opacity:.75}
+.garden-dock button:hover{background:#ffffff1a;box-shadow:0 0 14px #c9b2ff55}
+.garden-dock button:active{transform:scale(.94)}
+.garden-dock button[aria-pressed=true]{background:linear-gradient(135deg,#ffd6f0,#c9e8ff);color:#2a1d5a;box-shadow:0 0 16px #ffc6ec88}
+.garden-dock button:disabled{opacity:.4;cursor:default}
+.garden-dock button:focus-visible{outline:2px dashed #d9c6ff;outline-offset:2px}
+.garden-time{display:flex;align-items:center;gap:6px;padding:0 8px;color:#f0eaff}
+.garden-time .time-icon{font-size:18px;width:22px;text-align:center}
+.garden-time input{width:120px;accent-color:#e6b8ff;cursor:pointer}
+.garden-time small{font:10px 'Space Mono',monospace;opacity:.8;min-width:36px}
+.dock-sep{width:1px;height:30px;background:#ffffff22;margin:0 5px;flex:none}
+.flying-produce{position:fixed;z-index:40;pointer-events:none;font-size:26px;line-height:1;will-change:transform}
+@keyframes basket-bump{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
+
+@media(max-width:800px){
+  .cube-room .story{padding:4svh 6% 0}
+  .cube-room .scoreboard{top:calc(4svh + 22px);right:6%}
+  .garden .story{top:5%;left:6%;width:88%}
+  .cube-room .story h3,.garden .story h3{font-size:clamp(24px,7.4vw,30px);margin:8px 0 4px}
+  .cube-room .story>.mono,.garden .story>.mono{font-size:8px}
+  .cube-room .scoreboard{gap:14px}
+  .cube-room .scoreboard b{font-size:18px!important}
+  .cube-room .scoreboard #cube-state{font-size:14px!important}
+  .cube-room .game-area{padding:6px 4% 112px;gap:8px}
+  .cube-room .cube-moves{gap:6px}
+  .cube-room .cube-moves button{width:clamp(36px,11vw,46px);font-size:12px}
+  .cube-room .cube-tools{gap:8px}
+  .cube-room .cube-tools .game-btn{font-size:9px;padding:6px 3px}
+  .garden .story{max-width:none;width:62%}
+  .garden-basket{top:5%;right:6%;font-size:18px}
+  .garden-dock{bottom:110px}
+  .garden-dock button{padding:6px 8px 5px;font-size:18px}
+  .garden-dock button small{font-size:8px}
+}
+/* Portrait screens: the cube's canvas is wide, so crop its empty sides rather than shrink the cube. */
+@media(orientation:portrait) and (max-width:1100px){
+  .cube-room .game-area canvas{flex:0 1 auto;width:100%;height:auto;aspect-ratio:1.04;max-height:100%;object-fit:cover;margin:auto 0}
+}
+@media(min-width:801px) and (max-width:1100px){
+  .garden-dock button small{display:none}
+  .garden-dock button{padding:9px 10px}
+  .garden .scene-wayfinding{bottom:146px}
+}
+@media(max-width:430px){
+  .garden-time{padding:0 4px;gap:3px}
+  .garden-time input{width:74px}
+  .garden-time small{display:none}
+  .garden-dock button small{display:none}
+  .garden-dock button{padding:8px 9px}
+  .dock-sep{height:22px;margin:0 3px}
+}
+@media(orientation:landscape) and (max-height:500px){
+  .cube-room{grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,34%) minmax(0,1fr)}
+  .cube-room .story{padding:6svh 2% 0 6%}
+  .cube-room .story h3 br{display:inline}
+  .cube-room .scoreboard{position:static;margin-top:10px;justify-content:flex-start;text-align:left}
+  .garden .story{top:5%}
+  .cube-room .game-area{padding:5svh 4% 46px 0;gap:5px}
+  .cube-room .cube-moves button{width:34px;font-size:11px}
+  .cube-room .cube-moves button small{font-size:6px}
+  .cube-room .cube-tools .game-btn{font-size:9px;padding:4px 3px}
+  .cube-room #cube-status{display:none!important}
+  .garden-dock{bottom:46px}
+  .garden-dock button small{display:none}
+  .garden-dock button{padding:6px 9px;font-size:16px}
+}

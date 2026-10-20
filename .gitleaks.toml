@@ -1,0 +1,7 @@
+# Used by the secrets-history CI job. Default rules, minus known fake fixtures.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures and documented placeholders"
+paths = ['''^tests/''', '''^\.env\.example$''']

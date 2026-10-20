@@ -1,0 +1,53 @@
+/* Layout fixes so scenes, controls and floating UI never cover each other, from small
+   phones and landscape phones up to wide monitors. Loaded last. */
+
+/* Each game scene snaps to fill the screen, so a small scroll settles back into the scene you are
+   playing rather than leaving you between two. Proximity snapping leaves the long scroll-driven
+   passages free. */
+html{scroll-snap-type:y proximity}
+.experiment{scroll-snap-align:start;scroll-snap-stop:always}
+#cube-canvas{touch-action:none}
+
+/* Dust kicked up when the cat flops over and when it pops back up. */
+.cat-dust{position:absolute;bottom:4px;z-index:1;width:16px;height:16px;border-radius:50%;background:#d9cfc0;opacity:0;pointer-events:none;filter:blur(1.5px);animation:cat-dust .9s ease-out forwards}
+@keyframes cat-dust{0%{transform:translate(0,0) scale(.4);opacity:.55}100%{transform:translate(var(--drift,0px),-26px) scale(2.2);opacity:0}}
+.cat-body{will-change:transform}
+
+@media(max-width:800px){
+  /* The cat-visits toggle becomes a round paw button, so it can't collide with scene controls. */
+  .roamer-toggle{font-size:0!important;width:34px;height:34px;padding:0!important;border-radius:50%;bottom:66px!important;display:grid;place-items:center;overflow:hidden}
+  .roamer-toggle::before{content:'';width:18px;height:18px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f2e8db'%3E%3Cellipse cx='12' cy='16.5' rx='5.2' ry='4.4'/%3E%3Cellipse cx='5.2' cy='10.4' rx='2.1' ry='2.7'/%3E%3Cellipse cx='9.4' cy='6.4' rx='2.1' ry='2.8'/%3E%3Cellipse cx='14.6' cy='6.4' rx='2.1' ry='2.8'/%3E%3Cellipse cx='18.8' cy='10.4' rx='2.1' ry='2.7'/%3E%3C/svg%3E") center/contain no-repeat}
+  .roamer-toggle[aria-pressed=false]::before{opacity:.35}
+  .roamer-toggle[aria-pressed=false]::after{content:'';position:absolute;left:7px;right:7px;top:50%;height:2px;border-radius:2px;background:#f2e8db;transform:rotate(-40deg)}
+
+  /* Court: keep the distance control clear of the stacked scores. */
+  .court .court-distance{top:calc(6% + 186px)}
+}
+@media(max-width:800px) and (max-height:700px){
+  .court .scoreboard{gap:4px}
+  .court .court-distance{top:calc(6% + 166px)}
+  .court .game-controls{bottom:84px}
+  .court .court-caption{bottom:126px}
+}
+
+/* Landscape phones and very short windows: smaller type and the dock tucked lower, so the story
+   never runs under it. The cube and garden have their own rules in scenes.css. */
+@media(orientation:landscape) and (max-height:500px){
+  .experiment{min-height:0;height:100svh}
+  .chapter-tabs{bottom:6px;padding:4px 6px}
+  .chapter-tabs a,.chapter-tabs button{padding:6px 9px;font-size:9px}
+  .roamer-toggle{bottom:8px!important;right:10px!important;left:auto!important}
+  .scene-wayfinding{display:none}
+  .experiment .story>p,.experiment .story>label{display:none}
+  .experiment .chapter-no{font-size:110px;top:-20px}
+  .experiment h3{font-size:clamp(24px,4.2vw,34px)!important;line-height:1.05;margin:8px 0!important;letter-spacing:-1px;max-width:none!important}
+  .experiment .story>.mono{font-size:8px}
+
+
+  .court .story{top:5%;left:4%;width:34%}
+  .court .scoreboard{top:5%;right:4%;flex-direction:row;gap:18px}
+  .court .scoreboard b{font-size:20px}
+  .court .court-distance{top:auto;bottom:50px;right:4%}
+  .court .court-caption{display:none}
+  .court .game-controls{bottom:88px;left:auto;right:4%;transform:none;gap:12px}
+}

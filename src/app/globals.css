@@ -1,75 +1,30 @@
-﻿/* ===== FONT IMPORTS (MUST BE FIRST) ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
-
-/* ===== TAILWIND DIRECTIVES ===== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ===== CSS VARIABLES ===== */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-paper text-ink antialiased;
+  }
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-orange;
   }
 }
 
-/* ===== BASE STYLES ===== */
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--background);
-  color: var(--foreground);
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ===== CUSTOM SCROLLBAR ===== */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* ===== SELECTION ===== */
-::selection {
-  background: #3b82f6;
-  color: white;
-}
-
-/* ===== UTILITIES ===== */
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
-
-.line-clamp-2 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.line-clamp-3 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+@layer components {
+  .eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-[0.14em] text-muted;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-line px-4 py-2 text-xs font-medium transition-colors hover:bg-ink hover:text-paper disabled:cursor-wait disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply border-ink bg-ink text-paper hover:bg-ink/85;
+  }
+  .btn-danger {
+    @apply hover:border-red-700 hover:bg-red-700;
+  }
+  .input {
+    @apply w-full border border-line bg-panel px-3 py-2.5 text-sm text-ink placeholder:text-muted/70;
+  }
 }

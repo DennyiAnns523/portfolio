@@ -1,0 +1,81 @@
+/* Doors added for the server-backed features: the hello form, idea sharing and the nav buttons. */
+.nav-door{border:0;background:none;padding:0;font-size:12px;color:inherit;text-decoration:none}
+.nav-door:hover{color:var(--orange)}
+footer .nav-door{font-size:11px;color:var(--ink);border-bottom:1px solid var(--line)}
+.hp{position:absolute!important;left:-10000px!important;width:1px;height:1px;opacity:0}
+.share{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:12px;color:var(--muted)}
+.shared-head{margin-top:22px;color:var(--muted)}
+#shared-seeds{padding:0;list-style:none}
+#shared-seeds li{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
+.hello-form{display:grid;gap:14px;margin-top:22px}
+.hello-form label{display:grid;gap:6px;font-size:12px;color:var(--muted)}
+.hello-form input,.hello-form textarea{border:1px solid var(--line);padding:12px;background:var(--paper);color:var(--ink);font:inherit;font-size:13px;width:100%}
+.hello-form textarea{resize:vertical;min-height:110px}
+.hello-form input:focus-visible,.hello-form textarea:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.hello-form .action{justify-self:start}
+.hello-form .action:disabled{opacity:.6;cursor:wait}
+.form-error{margin:0;font-size:12px!important;color:#b8432a!important}
+body.night .form-error{color:#ff9a7a!important}
+dialog{max-height:calc(100dvh - 36px);overflow:auto}
+@media(max-width:420px){.nav-now{display:none}}
+/* Visitors: the "who's visiting?" card, feedback ratings and small text buttons. */
+.footer-doors{display:flex;gap:18px;flex-wrap:wrap}
+.link-btn{border:0;background:none;padding:0;font:inherit;font-size:inherit;color:var(--purple);text-decoration:underline;text-underline-offset:3px}
+.link-btn:hover{color:var(--orange)}
+.who-form{display:flex;gap:8px}
+.who-form input{min-width:0;flex:1;border:1px solid var(--line);padding:10px;background:var(--paper);color:var(--ink);font:inherit;font-size:13px}
+.who-form .action{padding:10px 14px}
+.who-anon{margin-top:10px;border:0;background:none;padding:0;font-size:12px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.who-anon:hover{color:var(--ink)}
+.rating{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+.rating legend{font-size:12px;color:var(--muted);margin-bottom:8px;padding:0}
+.rating legend span{opacity:.7;font-size:inherit}
+.rating label{cursor:pointer;position:relative}
+.rating input{position:absolute;inset:0;margin:0;opacity:0;pointer-events:none}
+.rating label span{display:grid;place-items:center;width:44px;height:44px;font-size:22px;border:1px solid var(--line);border-radius:50%;background:var(--paper);transition:transform .15s,border-color .15s}
+.rating label:hover span{transform:translateY(-2px)}
+.rating input:checked+span{border:2px solid var(--orange);background:var(--panel)}
+.rating input:focus-visible+span{outline:3px solid var(--orange);outline-offset:2px}
+.who-line{margin-top:14px}
+@media(max-width:700px){.nav-feedback{display:none}}
+/* The note Moriar delivers at the end of the page: an outlined "sticker" card that stands out
+   on any scene, popping open out of the envelope. */
+.note-card{position:fixed;z-index:40;width:min(350px,calc(100vw - 24px));background:#fffaf0;color:#302c3c;border:2px solid #302c3c;border-radius:20px;padding:30px 22px 18px;box-shadow:4px 5px 0 #302c3c,0 26px 70px #1d18284d;transform:scale(.06) rotate(-8deg);opacity:0;transition:transform .55s cubic-bezier(.2,1.45,.35,1),opacity .2s ease-out}
+.note-card.open{transform:none;opacity:1}
+.note-card.leaving{transform:scale(.9) translateY(14px);opacity:0;transition:transform .25s ease-in,opacity .25s ease-in}
+.note-tab{position:absolute;left:18px;top:-15px;background:#ee7046;color:#fffaf0;border:2px solid #302c3c;border-radius:30px;padding:4px 12px;font:600 11px/1.4 'DM Sans',Arial,sans-serif;letter-spacing:.2px;transform:rotate(-3deg);white-space:nowrap}
+.note-close{position:absolute;right:12px;top:8px;border:0;background:none;font-size:22px;line-height:1;color:#79737c;padding:4px}
+.note-close:hover{color:#302c3c}
+.note-hi{margin:0 0 4px;font-size:13px;color:#74668c;font-weight:600}
+.note-q{font:28px/1.12 Georgia,serif;letter-spacing:-.6px;margin:0 0 8px}
+.note-sub{margin:0 0 14px;font-size:13px;color:#6b6570;line-height:1.5}
+.note-fine{margin:12px 0 0;font-size:10.5px;color:#79737c;line-height:1.5}
+.note-card .who-form input,.note-feedback textarea{border:1.5px solid #d6d0c9;background:#f6f2e9;color:#302c3c;border-radius:10px}
+.note-card .who-form input:focus-visible,.note-feedback textarea:focus-visible{outline:3px solid #ee7046;outline-offset:1px}
+.note-card .action{background:#302c3c;color:#fffaf0;border-radius:10px}
+.note-card .who-anon{color:#6b6570}
+.note-card .form-error{margin:8px 0 0;font-size:12px;color:#b8432a!important}
+.note-feedback{display:grid;gap:12px;margin-top:6px}
+.note-feedback textarea{width:100%;padding:10px 12px;font:inherit;font-size:13px;resize:vertical;min-height:70px}
+.note-card .rating span{background:#f6f2e9;border-color:#d6d0c9}
+.note-card .rating input:checked+span{background:#fff;border-color:#ee7046}
+.note-actions{display:flex;align-items:center;gap:16px}
+.note-actions .who-anon{margin:0}
+.note-thanks{margin-top:4px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(prefers-reduced-motion:reduce){.note-card,.note-card.leaving{transition:opacity .2s}.note-card{transform:none}}
+
+/* The envelope in Moriar's mouth. */
+.cat-letter{position:absolute;left:0;top:0;z-index:3;width:34px;height:23px;background:#fffaf0;border:1.5px solid #302c3c;border-radius:3px;box-shadow:0 3px 6px #0003;pointer-events:none;transform-origin:0 50%}
+.cat-letter::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom right,transparent calc(50% - .75px),#302c3c calc(50% - .75px),#302c3c calc(50% + .75px),transparent calc(50% + .75px)) left/50% 100% no-repeat,linear-gradient(to bottom left,transparent calc(50% - .75px),#302c3c calc(50% - .75px),#302c3c calc(50% + .75px),transparent calc(50% + .75px)) right/50% 100% no-repeat;background-size:50% 70%}
+.cat-letter::after{content:'';position:absolute;left:50%;top:48%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#ee7046}
+.cat-letter[hidden]{display:none}
+
+/* Moriar: a little smaller (the fur is drawn in cat-companion.js). */
+.cat-roamer{width:220px!important;height:176px!important}
+@media(max-width:800px){.cat-roamer{width:168px!important;height:134px!important}}
+
+/* Footer doors as clear pills, so they never blend into the scenes. */
+.footer-doors .nav-door{border:1.5px solid var(--ink);border-radius:30px;padding:6px 13px;background:var(--panel);color:var(--ink);font-size:11px;text-decoration:none}
+.footer-doors .nav-door:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:380px){nav a[href="#fragments"]{display:none}}
